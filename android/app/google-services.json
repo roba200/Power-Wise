@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "473638062019",
+    "project_id": "powerwise00",
+    "storage_bucket": "powerwise00.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:473638062019:android:575c9a31e93a936d4c1f76",
+        "android_client_info": {
+          "package_name": "com.example.power_wise"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA31Jxretax4diOiDKizzVU-ck5Df5jf3g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
