@@ -7,6 +7,7 @@ import 'package:power_wise/pages/login_page.dart';
 import 'package:power_wise/pages/main_page.dart';
 import 'package:power_wise/pages/add_device_page.dart';
 import 'package:power_wise/pages/register_page.dart';
+import 'package:power_wise/pages/splash_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -28,7 +29,8 @@ class MyApp extends StatelessWidget {
             seedColor: Colors.deepPurple,
           ),
           useMaterial3: true),
-      home: MainPage(),
+      home: SplashScreen(),
+      // home: MainPage(),
     );
   }
 }

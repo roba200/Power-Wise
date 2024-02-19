@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 class RoomsCard extends StatelessWidget {
-  const RoomsCard({super.key});
+  final String roomNumber;
+  const RoomsCard({super.key, required this.roomNumber});
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +41,7 @@ class RoomsCard extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'Master bedroom',
+                          roomNumber,
                           style: TextStyle(fontSize: 16),
                         ),
                         Padding(

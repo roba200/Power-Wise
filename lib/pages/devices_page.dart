@@ -97,6 +97,12 @@ class _DeviceListPageState extends State<DeviceListPage> {
                     .snapshots(),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
+                    if (snapshot.data?.size == 0) {
+                      return Padding(
+                        padding: const EdgeInsets.only(top: 150),
+                        child: Center(child: Text('No devices Added yet')),
+                      );
+                    }
                     return ListView.builder(
                         shrinkWrap: true,
                         physics: NeverScrollableScrollPhysics(),

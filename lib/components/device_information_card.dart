@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:power_wise/components/custom_button_2.dart';
 
@@ -14,6 +16,7 @@ class DeviceInformationCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final double screenWidth = MediaQuery.of(context).size.width;
+
     return Card(
         color: Color.fromARGB(255, 252, 252, 252),
         shape: RoundedRectangleBorder(
@@ -32,7 +35,7 @@ class DeviceInformationCard extends StatelessWidget {
                   child: Row(
                     children: [
                       Padding(
-                        padding: const EdgeInsets.only(top: 5),
+                        padding: const EdgeInsets.only(top: 30),
                         child: Container(
                             width: screenWidth * 0.25,
                             height: screenWidth * 0.25,
@@ -44,7 +47,7 @@ class DeviceInformationCard extends StatelessWidget {
                         width: 15,
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(right: 8.0),
+                        padding: const EdgeInsets.only(right: 8.0, top: 30),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -78,11 +81,6 @@ class DeviceInformationCard extends StatelessWidget {
                 ),
                 SizedBox(
                   height: 18,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  child: CustomButton2(
-                      title: "Change Device Name", onPressed: () {}),
                 ),
               ],
             ),

@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class DeviceCard extends StatelessWidget {
@@ -17,6 +19,7 @@ class DeviceCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    TextEditingController _nameController = TextEditingController();
     final double screenWidth = MediaQuery.of(context).size.width;
     return Padding(
       padding: const EdgeInsets.only(bottom: 15),
@@ -30,7 +33,7 @@ class DeviceCard extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Container(
-                height: 170,
+                height: 180,
                 width: screenWidth,
                 color: Colors.transparent,
                 child: Row(
@@ -57,9 +60,53 @@ class DeviceCard extends StatelessWidget {
                           SizedBox(
                             height: 50,
                           ),
-                          Text(deviceName,
-                              style: TextStyle(
-                                  fontSize: 20, fontWeight: FontWeight.bold)),
+                          Row(
+                            children: [
+                              IconButton(
+                                  onPressed: () {
+                                    showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return AlertDialog(
+                                            title: Text('Set Device Name'),
+                                            content: TextField(
+                                              controller: _nameController,
+                                            ),
+                                            actions: [
+                                              ElevatedButton(
+                                                  onPressed: () {
+                                                    Navigator.pop(context);
+                                                  },
+                                                  child: Text("Canel")),
+                                              ElevatedButton(
+                                                  onPressed: () {
+                                                    FirebaseFirestore.instance
+                                                        .collection('users')
+                                                        .doc(FirebaseAuth
+                                                            .instance
+                                                            .currentUser!
+                                                            .uid)
+                                                        .collection('devices')
+                                                        .doc(serialNum)
+                                                        .update({
+                                                      'device_name':
+                                                          _nameController.text
+                                                    }).then((value) {
+                                                      Navigator.pop(context);
+                                                    });
+                                                  },
+                                                  child: Text("Set"))
+                                            ],
+                                          );
+                                        });
+                                  },
+                                  icon: Icon(Icons.edit)),
+                              Text(deviceName,
+                                  style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold)),
+                            ],
+                          ),
                           Text(serialNum,
                               style: TextStyle(
                                 fontSize: 13,

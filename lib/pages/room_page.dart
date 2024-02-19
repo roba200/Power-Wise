@@ -1,6 +1,7 @@
 import 'dart:ffi';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -11,12 +12,14 @@ import 'package:power_wise/components/empty_grey_card.dart';
 import 'package:power_wise/components/rooms_card.dart';
 
 class RoomPage extends StatefulWidget {
+  final String roomNumber;
   final String deviceId;
   final String roomId;
   const RoomPage({
     super.key,
     required this.deviceId,
     required this.roomId,
+    required this.roomNumber,
   });
 
   @override
@@ -45,10 +48,26 @@ class _RoomPageState extends State<RoomPage> {
                     "Hi,",
                     style: TextStyle(fontSize: 20),
                   ),
-                  Text(
-                    "Hasindu",
-                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                  ),
+                  StreamBuilder(
+                      stream: FirebaseFirestore.instance
+                          .collection('users')
+                          .doc(FirebaseAuth.instance.currentUser!.uid)
+                          .snapshots(),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          return Text(
+                            snapshot.data!['name'],
+                            style: TextStyle(
+                                fontSize: 24, fontWeight: FontWeight.bold),
+                          );
+                        } else {
+                          return Text(
+                            "Loading...",
+                            style: TextStyle(
+                                fontSize: 24, fontWeight: FontWeight.bold),
+                          );
+                        }
+                      }),
                 ],
               ),
               IconButton(
@@ -66,7 +85,7 @@ class _RoomPageState extends State<RoomPage> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                "Master Bedroom",
+                widget.roomNumber,
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
               StreamBuilder(
@@ -233,7 +252,10 @@ class _RoomPageState extends State<RoomPage> {
           ),
           Text(
             "Set Threshold Current",
-            style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          ),
+          SizedBox(
+            height: 5,
           ),
           StreamBuilder(
               stream: FirebaseFirestore.instance
@@ -341,10 +363,6 @@ class _RoomPageState extends State<RoomPage> {
           SizedBox(
             height: 20,
           ),
-          Text(
-            "Suggestions to Reduce power usage",
-            style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-          )
         ]),
       ),
     );

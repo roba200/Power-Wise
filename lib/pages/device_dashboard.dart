@@ -91,31 +91,48 @@ class _DeviceDashBoardState extends State<DeviceDashBoard> {
             SizedBox(
               height: 8,
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                DashBoardCard1(
-                  power: 20.0,
-                  sym: 'kW',
-                ),
-                Column(
-                  children: [
-                    DashBoardCard2(
-                      boxColor: Color.fromARGB(255, 0, 190, 250),
-                      value: 240,
-                      title: 'Voltage',
-                      symb: 'V',
-                    ),
-                    DashBoardCard2(
-                      boxColor: Color.fromARGB(255, 250, 0, 90),
-                      value: 1.5,
-                      title: 'Current',
-                      symb: 'A',
-                    ),
-                  ],
-                ),
-              ],
-            ),
+            StreamBuilder(
+                stream: FirebaseFirestore.instance
+                    .collection('devices')
+                    .doc(widget.deviceID)
+                    .snapshots(),
+                builder: (context, snapshot) {
+                  double totalPower =
+                      double.parse(snapshot.data!['room1_power']);
+                  if (snapshot.hasData) {
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        DashBoardCard1(
+                          power: totalPower > 1000
+                              ? totalPower / 1000
+                              : totalPower,
+                          sym: totalPower > 1000 ? 'Kw' : 'W',
+                        ),
+                        Column(
+                          children: [
+                            DashBoardCard2(
+                              boxColor: Color.fromARGB(255, 0, 190, 250),
+                              value:
+                                  double.parse(snapshot.data!['room1_voltage']),
+                              title: 'Voltage',
+                              symb: 'V',
+                            ),
+                            DashBoardCard2(
+                              boxColor: Color.fromARGB(255, 250, 0, 90),
+                              value:
+                                  double.parse(snapshot.data!['room1_current']),
+                              title: 'Current',
+                              symb: 'A',
+                            ),
+                          ],
+                        ),
+                      ],
+                    );
+                  } else {
+                    return CircularProgressIndicator();
+                  }
+                }),
             SizedBox(
               height: 20,
             ),
@@ -124,7 +141,9 @@ class _DeviceDashBoardState extends State<DeviceDashBoard> {
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
             GestureDetector(
-              child: RoomsCard(),
+              child: RoomsCard(
+                roomNumber: 'Room 1',
+              ),
               onTap: () {
                 Navigator.push(
                     context,
@@ -132,11 +151,14 @@ class _DeviceDashBoardState extends State<DeviceDashBoard> {
                         builder: (context) => RoomPage(
                               deviceId: widget.deviceID,
                               roomId: 'room1',
+                              roomNumber: 'Room 1',
                             )));
               },
             ),
             GestureDetector(
-              child: RoomsCard(),
+              child: RoomsCard(
+                roomNumber: 'Room 2',
+              ),
               onTap: () {
                 Navigator.push(
                     context,
@@ -144,11 +166,14 @@ class _DeviceDashBoardState extends State<DeviceDashBoard> {
                         builder: (context) => RoomPage(
                               deviceId: widget.deviceID,
                               roomId: 'room2',
+                              roomNumber: 'Room 2',
                             )));
               },
             ),
             GestureDetector(
-              child: RoomsCard(),
+              child: RoomsCard(
+                roomNumber: 'Room 3',
+              ),
               onTap: () {
                 Navigator.push(
                     context,
@@ -156,11 +181,14 @@ class _DeviceDashBoardState extends State<DeviceDashBoard> {
                         builder: (context) => RoomPage(
                               deviceId: widget.deviceID,
                               roomId: 'room3',
+                              roomNumber: 'Room 3',
                             )));
               },
             ),
             GestureDetector(
-              child: RoomsCard(),
+              child: RoomsCard(
+                roomNumber: 'Room 4',
+              ),
               onTap: () {
                 Navigator.push(
                     context,
@@ -168,6 +196,7 @@ class _DeviceDashBoardState extends State<DeviceDashBoard> {
                         builder: (context) => RoomPage(
                               deviceId: widget.deviceID,
                               roomId: 'room4',
+                              roomNumber: 'Room 4',
                             )));
               },
             ),
