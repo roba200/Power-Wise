@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
 class TestPage extends StatefulWidget {
@@ -12,13 +13,12 @@ class _TestPageState extends State<TestPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: ElevatedButton(
-            onPressed: () {
-              FirebaseAuth.instance.signOut();
-            },
-            child: Text("Sign Out")),
-      ),
-    );
+        body: Center(
+      child: ElevatedButton(
+          onPressed: () {
+            FirebaseAuth.instance.signOut();
+          },
+          child: Text("Sign Out")),
+    ));
   }
 }

@@ -49,6 +49,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '473638062019',
     projectId: 'powerwise00',
     authDomain: 'powerwise00.firebaseapp.com',
+    databaseURL: 'https://powerwise00-default-rtdb.europe-west1.firebasedatabase.app',
     storageBucket: 'powerwise00.appspot.com',
   );
 
@@ -57,6 +58,7 @@ class DefaultFirebaseOptions {
     appId: '1:473638062019:android:575c9a31e93a936d4c1f76',
     messagingSenderId: '473638062019',
     projectId: 'powerwise00',
+    databaseURL: 'https://powerwise00-default-rtdb.europe-west1.firebasedatabase.app',
     storageBucket: 'powerwise00.appspot.com',
   );
 
@@ -65,6 +67,7 @@ class DefaultFirebaseOptions {
     appId: '1:473638062019:ios:891cff95fcc694cb4c1f76',
     messagingSenderId: '473638062019',
     projectId: 'powerwise00',
+    databaseURL: 'https://powerwise00-default-rtdb.europe-west1.firebasedatabase.app',
     storageBucket: 'powerwise00.appspot.com',
     iosBundleId: 'com.example.powerWise',
   );
@@ -74,6 +77,7 @@ class DefaultFirebaseOptions {
     appId: '1:473638062019:ios:10311c90f8a484124c1f76',
     messagingSenderId: '473638062019',
     projectId: 'powerwise00',
+    databaseURL: 'https://powerwise00-default-rtdb.europe-west1.firebasedatabase.app',
     storageBucket: 'powerwise00.appspot.com',
     iosBundleId: 'com.example.powerWise.RunnerTests',
   );

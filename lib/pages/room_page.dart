@@ -3,6 +3,7 @@ import 'dart:ffi';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:power_wise/components/dashboard_card_1.dart';
@@ -27,7 +28,56 @@ class RoomPage extends StatefulWidget {
 }
 
 class _RoomPageState extends State<RoomPage> {
+  String power = "0";
+  String voltage = "0";
+  String current = "0";
+  String energy = "0";
   bool _lights = false;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    FirebaseDatabase.instance
+        .ref()
+        .child("${widget.deviceId}/${widget.roomId}_power")
+        .onValue
+        .listen((event) {
+      setState(() {
+        power = event.snapshot.value.toString();
+      });
+    });
+
+    FirebaseDatabase.instance
+        .ref()
+        .child("${widget.deviceId}/voltage")
+        .onValue
+        .listen((event) {
+      setState(() {
+        voltage = event.snapshot.value.toString();
+      });
+    });
+
+    FirebaseDatabase.instance
+        .ref()
+        .child("${widget.deviceId}/${widget.roomId}_current")
+        .onValue
+        .listen((event) {
+      setState(() {
+        current = event.snapshot.value.toString();
+      });
+    });
+
+    FirebaseDatabase.instance
+        .ref()
+        .child("${widget.deviceId}/${widget.roomId}_energy")
+        .onValue
+        .listen((event) {
+      setState(() {
+        energy = event.snapshot.value.toString();
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     String date = "3rd January 2024";
@@ -89,33 +139,33 @@ class _RoomPageState extends State<RoomPage> {
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
               StreamBuilder(
-                  stream: FirebaseFirestore.instance
-                      .collection('devices')
-                      .doc(widget.deviceId)
-                      .snapshots(),
+                  stream: FirebaseDatabase.instance
+                      .ref()
+                      .child("${widget.deviceId}/${widget.roomId}_relay")
+                      .onValue,
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
                       return CupertinoSwitch(
-                          value:
-                              snapshot.data![widget.roomId + "_relay"] == "on"
-                                  ? true
-                                  : snapshot.data![widget.roomId + "_relay"] ==
-                                          "off"
-                                      ? false
-                                      : false,
+                          value: snapshot.data!.snapshot.value == 1
+                              ? true
+                              : snapshot.data!.snapshot.value == 0
+                                  ? false
+                                  : false,
                           onChanged: (bool value) {
                             setState(() {
                               _lights = value;
                               if (value == true) {
-                                FirebaseFirestore.instance
-                                    .collection('devices')
-                                    .doc(widget.deviceId)
-                                    .update({widget.roomId + "_relay": "on"});
+                                FirebaseDatabase.instance
+                                    .ref()
+                                    .child(
+                                        "${widget.deviceId}/${widget.roomId}_relay")
+                                    .set(1);
                               } else {
-                                FirebaseFirestore.instance
-                                    .collection('devices')
-                                    .doc(widget.deviceId)
-                                    .update({widget.roomId + "_relay": "off"});
+                                FirebaseDatabase.instance
+                                    .ref()
+                                    .child(
+                                        "${widget.deviceId}/${widget.roomId}_relay")
+                                    .set(0);
                               }
                             });
                           });
@@ -140,113 +190,78 @@ class _RoomPageState extends State<RoomPage> {
           SizedBox(
             height: 8,
           ),
-          StreamBuilder(
-              stream: FirebaseFirestore.instance
-                  .collection('devices')
-                  .doc(widget.deviceId)
-                  .snapshots(),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      DashBoardCard1(
-                        power: double.parse(
-                                    snapshot.data![widget.roomId + '_power']) >
-                                1000
-                            ? double.parse(
-                                    snapshot.data![widget.roomId + '_power']) /
-                                1000.0
-                            : double.parse(
-                                snapshot.data![widget.roomId + '_power']),
-                        sym: double.parse(
-                                    snapshot.data![widget.roomId + '_power']) >
-                                1000
-                            ? 'kW'
-                            : 'W',
-                      ),
-                      Column(
-                        children: [
-                          DashBoardCard2(
-                            boxColor: Color.fromARGB(255, 0, 190, 250),
-                            value: double.parse(
-                                snapshot.data![widget.roomId + '_voltage']),
-                            title: 'Voltage',
-                            symb: 'V',
-                          ),
-                          DashBoardCard2(
-                            boxColor: Color.fromARGB(255, 250, 0, 90),
-                            value: double.parse(
-                                snapshot.data![widget.roomId + '_current']),
-                            title: 'Current',
-                            symb: 'A',
-                          ),
-                        ],
-                      ),
-                    ],
-                  );
-                } else {
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
-              }),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              DashBoardCard1(
+                power: double.parse(power) > 1000
+                    ? double.parse(
+                        (double.parse(power) / 1000.0).toStringAsFixed(2))
+                    : double.parse((double.parse(power)).toStringAsFixed(2)),
+                sym: double.parse(power) > 1000 ? 'kW' : 'W',
+              ),
+              Column(
+                children: [
+                  DashBoardCard2(
+                    boxColor: Color.fromARGB(255, 0, 190, 250),
+                    value:
+                        double.parse(double.parse(voltage).toStringAsFixed(2)),
+                    title: 'Voltage',
+                    symb: 'V',
+                  ),
+                  DashBoardCard2(
+                    boxColor: Color.fromARGB(255, 250, 0, 90),
+                    value:
+                        double.parse(double.parse(current).toStringAsFixed(2)),
+                    title: 'Current',
+                    symb: 'A',
+                  ),
+                ],
+              ),
+            ],
+          ),
           SizedBox(
             height: 20,
           ),
-          StreamBuilder(
-              stream: FirebaseFirestore.instance
-                  .collection('devices')
-                  .doc(widget.deviceId)
-                  .snapshots(),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return EmptyGreyCard(
-                    CardHeight: 100,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(top: 8.0, left: 8.0),
-                          child: Text(
-                            "Total power consumption",
-                            style: TextStyle(fontSize: 16),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 8.0),
-                          child: Text(
-                            "from : " + date,
-                            style: TextStyle(fontSize: 13),
-                          ),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                right: 8.0,
-                              ),
-                              child: Text(
-                                snapshot.data![widget.roomId + '_energy'] +
-                                    " Wh",
-                                style: TextStyle(
-                                    fontSize: 32,
-                                    fontWeight: FontWeight.bold,
-                                    color: Color.fromARGB(255, 112, 65, 238)),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
+          EmptyGreyCard(
+            CardHeight: 100,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 8.0, left: 8.0),
+                  child: Text(
+                    "Total Energy consumption",
+                    style: TextStyle(fontSize: 16),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 8.0),
+                  child: Text(
+                    "from : " + date,
+                    style: TextStyle(fontSize: 13),
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(
+                        right: 8.0,
+                      ),
+                      child: Text(
+                        energy + " Wh",
+                        style: TextStyle(
+                            fontSize: 32,
+                            fontWeight: FontWeight.bold,
+                            color: Color.fromARGB(255, 112, 65, 238)),
+                      ),
                     ),
-                  );
-                } else {
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
-              }),
+                  ],
+                ),
+              ],
+            ),
+          ),
           SizedBox(
             height: 20,
           ),
@@ -258,10 +273,10 @@ class _RoomPageState extends State<RoomPage> {
             height: 5,
           ),
           StreamBuilder(
-              stream: FirebaseFirestore.instance
-                  .collection('devices')
-                  .doc(widget.deviceId)
-                  .snapshots(),
+              stream: FirebaseDatabase.instance
+                  .ref()
+                  .child("${widget.deviceId}/${widget.roomId}_threshold")
+                  .onValue,
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   return EmptyGreyCard(
@@ -284,8 +299,7 @@ class _RoomPageState extends State<RoomPage> {
                               Padding(
                                 padding: const EdgeInsets.only(left: 8.0),
                                 child: Text(
-                                  snapshot.data![widget.roomId + '_thershold']
-                                          .toString() +
+                                  snapshot.data!.snapshot.value.toString() +
                                       " A",
                                   style: TextStyle(
                                       fontSize: 32,
@@ -323,19 +337,15 @@ class _RoomPageState extends State<RoomPage> {
                                                       child: Text("Cancel")),
                                                   ElevatedButton(
                                                       onPressed: () {
-                                                        FirebaseFirestore
+                                                        FirebaseDatabase
                                                             .instance
-                                                            .collection(
-                                                                'devices')
-                                                            .doc(
-                                                                widget.deviceId)
-                                                            .update({
-                                                          widget.roomId +
-                                                                  '_thershold':
-                                                              double.parse(
-                                                                  _controller
-                                                                      .text)
-                                                        }).then((value) =>
+                                                            .ref()
+                                                            .child(
+                                                                "${widget.deviceId}/${widget.roomId}_threshold")
+                                                            .set(double.parse(
+                                                                _controller
+                                                                    .text))
+                                                            .then((value) =>
                                                                 Navigator.pop(
                                                                     context));
                                                       },

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:power_wise/components/dashboard_card_1.dart';
 import 'package:power_wise/components/dashboard_card_2.dart';
@@ -21,6 +22,44 @@ class DeviceDashBoard extends StatefulWidget {
 }
 
 class _DeviceDashBoardState extends State<DeviceDashBoard> {
+  String totalPower = "0";
+  String totalCurrent = "0";
+  String totalVoltage = "0";
+
+  @override
+  void initState() {
+    super.initState();
+    FirebaseDatabase.instance
+        .ref()
+        .child("${widget.deviceID}/totalPower")
+        .onValue
+        .listen((event) {
+      setState(() {
+        totalPower = event.snapshot.value.toString();
+      });
+    });
+
+    FirebaseDatabase.instance
+        .ref()
+        .child("${widget.deviceID}/voltage")
+        .onValue
+        .listen((event) {
+      setState(() {
+        totalVoltage = event.snapshot.value.toString();
+      });
+    });
+
+    FirebaseDatabase.instance
+        .ref()
+        .child("${widget.deviceID}/totalCurrent")
+        .onValue
+        .listen((event) {
+      setState(() {
+        totalCurrent = event.snapshot.value.toString();
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -91,48 +130,38 @@ class _DeviceDashBoardState extends State<DeviceDashBoard> {
             SizedBox(
               height: 8,
             ),
-            StreamBuilder(
-                stream: FirebaseFirestore.instance
-                    .collection('devices')
-                    .doc(widget.deviceID)
-                    .snapshots(),
-                builder: (context, snapshot) {
-                  double totalPower =
-                      double.parse(snapshot.data!['room1_power']);
-                  if (snapshot.hasData) {
-                    return Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        DashBoardCard1(
-                          power: totalPower > 1000
-                              ? totalPower / 1000
-                              : totalPower,
-                          sym: totalPower > 1000 ? 'Kw' : 'W',
-                        ),
-                        Column(
-                          children: [
-                            DashBoardCard2(
-                              boxColor: Color.fromARGB(255, 0, 190, 250),
-                              value:
-                                  double.parse(snapshot.data!['room1_voltage']),
-                              title: 'Voltage',
-                              symb: 'V',
-                            ),
-                            DashBoardCard2(
-                              boxColor: Color.fromARGB(255, 250, 0, 90),
-                              value:
-                                  double.parse(snapshot.data!['room1_current']),
-                              title: 'Current',
-                              symb: 'A',
-                            ),
-                          ],
-                        ),
-                      ],
-                    );
-                  } else {
-                    return CircularProgressIndicator();
-                  }
-                }),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                DashBoardCard1(
+                  power: double.parse(totalPower) > 1000
+                      ? double.parse(
+                              double.parse(totalPower).toStringAsFixed(2)) /
+                          1000
+                      : double.parse(
+                          double.parse(totalPower).toStringAsFixed(2)),
+                  sym: double.parse(totalPower) > 1000 ? 'Kw' : 'W',
+                ),
+                Column(
+                  children: [
+                    DashBoardCard2(
+                      boxColor: Color.fromARGB(255, 0, 190, 250),
+                      value: double.parse(
+                          double.parse(totalVoltage).toStringAsFixed(2)),
+                      title: 'Voltage',
+                      symb: 'V',
+                    ),
+                    DashBoardCard2(
+                      boxColor: Color.fromARGB(255, 250, 0, 90),
+                      value: double.parse(
+                          double.parse(totalCurrent).toStringAsFixed(2)),
+                      title: 'Current',
+                      symb: 'A',
+                    ),
+                  ],
+                ),
+              ],
+            ),
             SizedBox(
               height: 20,
             ),
