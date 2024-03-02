@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:power_wise/pages/about_page.dart';
+import 'package:power_wise/pages/developers_page.dart';
 
 class SettingPage extends StatelessWidget {
   const SettingPage({super.key});
@@ -59,6 +60,15 @@ class SettingPage extends StatelessWidget {
               );
             },
           ),
+          ListTile(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => DevelopersPage()),
+              );
+            },
+            title: Text("Developers"),
+          )
         ],
       ),
     );

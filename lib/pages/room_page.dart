@@ -181,14 +181,14 @@ class _RoomPageState extends State<RoomPage> {
             height: 5,
           ),
           SizedBox(
-            height: 18,
+            height: 30,
           ),
           Text(
             "Live Power Metrics",
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
           ),
           SizedBox(
-            height: 8,
+            height: 30,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -221,47 +221,47 @@ class _RoomPageState extends State<RoomPage> {
             ],
           ),
           SizedBox(
-            height: 20,
+            height: 50,
           ),
-          EmptyGreyCard(
-            CardHeight: 100,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 8.0, left: 8.0),
-                  child: Text(
-                    "Total Energy consumption",
-                    style: TextStyle(fontSize: 16),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 8.0),
-                  child: Text(
-                    "from : " + date,
-                    style: TextStyle(fontSize: 13),
-                  ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(
-                        right: 8.0,
-                      ),
-                      child: Text(
-                        energy + " Wh",
-                        style: TextStyle(
-                            fontSize: 32,
-                            fontWeight: FontWeight.bold,
-                            color: Color.fromARGB(255, 112, 65, 238)),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
+          // EmptyGreyCard(
+          //   CardHeight: 100,
+          //   child: Column(
+          //     crossAxisAlignment: CrossAxisAlignment.start,
+          //     children: [
+          //       Padding(
+          //         padding: const EdgeInsets.only(top: 8.0, left: 8.0),
+          //         child: Text(
+          //           "Total Energy consumption",
+          //           style: TextStyle(fontSize: 16),
+          //         ),
+          //       ),
+          //       Padding(
+          //         padding: const EdgeInsets.only(left: 8.0),
+          //         child: Text(
+          //           "from : " + date,
+          //           style: TextStyle(fontSize: 13),
+          //         ),
+          //       ),
+          //       Row(
+          //         mainAxisAlignment: MainAxisAlignment.end,
+          //         children: [
+          //           Padding(
+          //             padding: const EdgeInsets.only(
+          //               right: 8.0,
+          //             ),
+          //             child: Text(
+          //               energy + " Wh",
+          //               style: TextStyle(
+          //                   fontSize: 32,
+          //                   fontWeight: FontWeight.bold,
+          //                   color: Color.fromARGB(255, 112, 65, 238)),
+          //             ),
+          //           ),
+          //         ],
+          //       ),
+          //     ],
+          //   ),
+          // ),
           SizedBox(
             height: 20,
           ),
@@ -270,7 +270,7 @@ class _RoomPageState extends State<RoomPage> {
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
           ),
           SizedBox(
-            height: 5,
+            height: 20,
           ),
           StreamBuilder(
               stream: FirebaseDatabase.instance

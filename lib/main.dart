@@ -2,11 +2,13 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:power_wise/firebase_options.dart';
+import 'package:power_wise/pages/about_page.dart';
 import 'package:power_wise/pages/login_or_sign_up_page.dart';
 import 'package:power_wise/pages/login_page.dart';
 import 'package:power_wise/pages/main_page.dart';
 import 'package:power_wise/pages/add_device_page.dart';
 import 'package:power_wise/pages/register_page.dart';
+import 'package:power_wise/pages/setting_page.dart';
 import 'package:power_wise/pages/splash_screen.dart';
 
 void main() async {
@@ -30,8 +32,8 @@ class MyApp extends StatelessWidget {
           ),
           useMaterial3: true),
       // home: TestPage()
-      home: SplashScreen(),
-      // home: MainPage(),
+      //home: SettingPage(),
+      home: MainPage(),
     );
   }
 }
