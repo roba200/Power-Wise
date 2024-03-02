@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:power_wise/components/device_card.dart';
 import 'package:power_wise/pages/add_device_page.dart';
 import 'package:power_wise/pages/device_dashboard.dart';
-import 'package:power_wise/pages/test_page.dart';
+import 'package:power_wise/pages/setting_page.dart';
 
 class DevicesPage extends StatefulWidget {
   const DevicesPage({super.key});
@@ -16,7 +16,7 @@ class DevicesPage extends StatefulWidget {
 class _DevicesPageState extends State<DevicesPage> {
   int _currentIndex = 0;
 
-  List pages = [DeviceListPage(), AddDevicePage(), TestPage()];
+  List pages = [DeviceListPage(), AddDevicePage(), SettingPage()];
   @override
   Widget build(BuildContext context) {
     return Scaffold(

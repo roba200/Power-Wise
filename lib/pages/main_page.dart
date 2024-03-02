@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:power_wise/pages/devices_page.dart';
 import 'package:power_wise/pages/login_or_sign_up_page.dart';
 import 'package:power_wise/pages/register_page.dart';
-import 'package:power_wise/pages/test_page.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});

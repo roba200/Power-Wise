@@ -63,13 +63,11 @@ class _DeviceDashBoardState extends State<DeviceDashBoard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(),
       body: Padding(
-        padding: const EdgeInsets.all(20.0),
+        padding: const EdgeInsets.only(bottom: 20, left: 20, right: 20),
         child: ListView(
           children: [
-            SizedBox(
-              height: 40,
-            ),
             Text(
               "Hi",
               style: TextStyle(fontSize: 20),
@@ -95,7 +93,7 @@ class _DeviceDashBoardState extends State<DeviceDashBoard> {
                   }
                 }),
             SizedBox(
-              height: 40,
+              height: 35,
             ),
             Row(
               children: [
